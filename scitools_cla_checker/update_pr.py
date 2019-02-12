@@ -187,18 +187,10 @@ def check_pr(repo, number):
 @gen.coroutine
 def get_contributors():
     """
-    Return a list of GitHub logins for those that are on the contributors.json
-    document.
+    Return a list of GitHub logins for those that have signed the CLA
 
     """
-    contrib_json = ('https://raw.githubusercontent.com/SciTools/'
-                    'scitools.org.uk/master/contributors.json')
     http_client = tornado.httpclient.AsyncHTTPClient()
-    response = yield http_client.fetch(contrib_json)
-    content = json.loads(response.body.decode())
-    signatures = sorted([person['profile_name']
-                         for person in content['contributors']])
-
     v4_json = (
             'https://script.google.com/macros/s/'
             'AKfycbwqZ0JLlOKJEcvYUYFXo77o6nux9tSHvOJISUnk3yHi-Bk0Qanz/exec')
@@ -206,7 +198,7 @@ def get_contributors():
     content = json.loads(response.body.decode())
     v4_signatures = sorted(content['signatories'])
 
-    return sorted(signatures + v4_signatures)
+    return sorted(v4_signatures)
 
 
 def configure_default_client():
